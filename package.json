@@ -5,14 +5,27 @@
   "author": "Dustin",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "if-env": "^1.0.4",
-    "mongoose": "^6.0.2"
+    "js-cookie": "^3.0.1",
+    "mongoose": "^6.0.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.4",
     "@types/node": "^16.7.5",
+    "@types/passport": "^1.0.7",
+    "@types/passport-local": "^1.0.34",
     "concurrently": "^6.2.1",
     "husky": "^7.0.2",
     "nodemon": "^2.0.12",
@@ -24,8 +37,9 @@
   "scripts": {
     "prepare": "husky install",
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
-    "start:prod": "node server.js",
+    "start:prod": "ts-node server",
     "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
-    "client": "cd client; yarn start"
+    "client": "cd clients/web; yarn start",
+    "server": "nodemon server"
   }
 }

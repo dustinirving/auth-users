@@ -1,24 +1,57 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import routes from './routes';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import passport from './auth';
+import routes from './routes';
+import path from 'path';
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-dotenv.config();
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+  }),
+);
+
+app.use(
+  session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+      httpOnly: true,
+      maxAge: 20 * 60 * 1000, // 20 minutes per active cookie (in milliseconds)
+    },
+  }),
+);
+app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Serve up static assets
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
-// Add routes, both API and view
+
+app.use(express.static('public'));
+
+// app.use((req, res) => res.sendFile(path.join(__dirname, '/clients/web/build/index.html')));
+
+// Add routes
 app.use(routes);
 
-// mongodb environment variables
+// MongoDB
 const { MONGO_URI } = process.env;
 
 const dbConnectionURL = { LOCALURL: MONGO_URI };

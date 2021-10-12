@@ -1,19 +1,20 @@
-import db from '../models';
+import { User } from '../models';
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
 
 const usersController = {
   findAll: (req: Request, res: Response) => {
-    db.User.find(req.query)
+    User.find(req.query)
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(422).json(err));
   },
   findById: (req: Request, res: Response) => {
-    db.User.findById(req.params.id)
+    User.findById(req.params.id)
       .then((dbModel) => res.json(dbModel))
       .catch((err) => res.status(422).json(err));
   },
   remove: (req: Request, res: Response) => {
-    db.User.findById(req.params.id)
+    User.findById(req.params.id)
       .then((dbModel) => {
         if (dbModel) dbModel.remove();
       })
@@ -23,9 +24,23 @@ const usersController = {
       .catch((err) => res.status(422).json(err));
   },
   create: (req: Request, res: Response) => {
-    db.User.create(req.body)
-      .then((dbModel) => res.json(dbModel))
-      .catch((err) => res.status(422).json(err));
+    User.findOne({ email: req.body.email }, async (err: any, doc: any) => {
+      if (err) throw err;
+      if (doc) res.send('User Already Exists');
+      if (!doc) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const newUser = new User({
+          email: req.body.email,
+          password: hashedPassword,
+        });
+
+        await newUser.save();
+        res.json(newUser);
+      }
+    });
+  },
+  authenticate: (req: Request, res: Response) => {
+    res.send('Hey');
   },
 };
 
