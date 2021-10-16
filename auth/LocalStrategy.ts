@@ -12,7 +12,7 @@ const LocalStrategy = new Strategy(
       bcrypt.compare(password, user.password, (err, result) => {
         if (err) throw err;
         if (result === true) {
-          return done(null, user);
+          return done(null, user._id);
         } else {
           return done(null, false);
         }

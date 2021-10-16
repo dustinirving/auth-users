@@ -1,16 +1,23 @@
-import React from 'react';
-import Form from '../components/Form';
+import React, { useContext } from 'react';
+import Form from 'components/Form';
 import styled from 'styled-components';
-import Card from '../components/Card';
+import Card from 'components/Card';
 import { Link } from 'react-router-dom';
-import userApi from '../api/AuthApi';
-import { User } from '../../../../types/user';
+import AuthApi from 'api/AuthApi';
+import { User } from 'types/user';
+import { Context } from 'stores/Store';
 
 const Login = () => {
-  const handleLogin = ({ email, password }: User) => {
-    userApi.login({ email, password }).then((user) => {
-      console.log(user);
-    });
+  const [{ user }, dispatch] = useContext<any>(Context);
+  const handleLogin = async ({ email, password }: User) => {
+    try {
+      const authUser = await AuthApi.login({ email, password });
+      if (authUser) {
+        dispatch({ type: 'UPDATE_USER', payload: authUser });
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

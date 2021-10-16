@@ -39,9 +39,6 @@ const usersController = {
       }
     });
   },
-  authenticate: (req: Request, res: Response) => {
-    res.send('Hey');
-  },
 };
 
 export default usersController;

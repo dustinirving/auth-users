@@ -5,6 +5,11 @@ const Reducer = (state: any, action: any) => {
         ...state,
         user: action.payload,
       };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: action.payload,
+      };
     default:
       return state;
   }

@@ -1,4 +1,6 @@
-export interface User {
-  email: string;
-  password: string;
+export interface UserType {
+  _id: string;
+  email?: string;
+  password?: string;
+  googleId?: string;
 }

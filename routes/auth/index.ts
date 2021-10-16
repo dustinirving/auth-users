@@ -14,7 +14,7 @@ router.route('/signup').post(usersController.create);
 router.post('/login', (req, res) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) throw err;
-    if (!user) res.send('No User Exists');
+    if (!user) res.json(null);
     else {
       req.logIn(user, (err) => {
         if (err) throw err;
@@ -24,8 +24,19 @@ router.post('/login', (req, res) => {
   })(req, res);
 });
 
+router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }),
+  (req, res) => {
+    res.redirect('http://localhost:3000');
+  },
+);
+
 router.post('/logout', (req, res) => {
   req.logout();
+  res.send('Logged out user');
 });
 
 export default router;

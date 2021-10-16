@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from './styles/Button.styled';
 import Input from './styles/Input.styled';
+import GoogleButton from 'react-google-button';
 
 interface FormProps {
   type: 'login' | 'signup';
@@ -9,6 +11,7 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ type, onSubmit }) => {
+  const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -34,6 +37,9 @@ const Form: React.FC<FormProps> = ({ type, onSubmit }) => {
       >
         {type === 'login' ? 'Login' : 'Sign up'}
       </Button>
+      <a href="http://localhost:8080/auth/google">
+        <GoogleButton />
+      </a>
     </StyledForm>
   );
 };
